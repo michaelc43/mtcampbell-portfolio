@@ -9,23 +9,27 @@ type WPPage = {
 async function getPageBySlug(slug: string) {
   const wpUrl = process.env.WP_URL!;
   const res = await fetch(`${wpUrl}/wp-json/wp/v2/pages?slug=${slug}`, {
+    // Required for static export: must be cacheable at build time
     cache: "force-cache",
   });
+
   if (!res.ok) throw new Error(`Failed to fetch page ${slug}: ${res.status}`);
   const arr: WPPage[] = await res.json();
   return arr[0] ?? null;
 }
 
-export default async function Home() {
-  const page = await getPageBySlug("home");
+export default async function About() {
+  const page = await getPageBySlug("about");
 
   return (
     <main style={{ padding: 24, maxWidth: 900, margin: "0 auto" }}>
-      <h1 dangerouslySetInnerHTML={{ __html: page?.title.rendered ?? "Home" }} />
+      <h1 dangerouslySetInnerHTML={{ __html: page?.title.rendered ?? "About" }} />
       {page ? (
         <div dangerouslySetInnerHTML={{ __html: page.content.rendered }} />
       ) : (
-        <p>Create a WordPress page with slug <code>home</code> and publish it.</p>
+        <p>
+          Create a WordPress page with slug <code>about</code> and publish it.
+        </p>
       )}
     </main>
   );
