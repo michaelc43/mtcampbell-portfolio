@@ -8,10 +8,14 @@ type WPPage = {
 
 async function getPageBySlug(slug: string) {
   const wpUrl = process.env.WP_URL!;
-  const res = await fetch(`${wpUrl}/wp-json/wp/v2/pages?slug=${slug}`, {
-    // Required for static export: must be cacheable at build time
-    cache: "force-cache",
-  });
+  import { wpFetch } from "@/lib/wp";
+
+const page = await wpFetch<any[]>(
+  `/wp-json/wp/v2/pages?slug=about`
+);
+
+const data = page[0];
+
 
   if (!res.ok) throw new Error(`Failed to fetch page ${slug}: ${res.status}`);
   const arr: WPPage[] = await res.json();
