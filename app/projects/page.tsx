@@ -1,29 +1,32 @@
-export const dynamic = "force-static";
-
 import { wpFetch } from "@/lib/wp";
+
+export const dynamic = "force-static";
 
 type WPPage = {
   id: number;
   title: { rendered: string };
-  slug: string;
+  content: { rendered: string };
 };
 
-export default async function PagesTest() {
-  const pages = await wpFetch<WPPage[]>(
-    `/wp-json/wp/v2/pages?per_page=20`
-  );
+async function getPageBySlug(slug: string) {
+  const pages = await wpFetch<WPPage[]>(`/wp-json/wp/v2/pages?slug=${slug}`);
+  return pages[0] ?? null;
+}
+
+export default async function AboutPage() {
+  const page = await getPageBySlug("projects");
 
   return (
-    <main style={{ padding: 24 }}>
-      <h1>WordPress Pages</h1>
-      <ul>
-        {pages.map((p) => (
-          <li key={p.id}>
-            <strong dangerouslySetInnerHTML={{ __html: p.title.rendered }} />{" "}
-            <span style={{ opacity: 0.7 }}>({p.slug})</span>
-          </li>
-        ))}
-      </ul>
+    <main style={{ padding: 24, maxWidth: 900, margin: "0 auto" }}>
+      {page ? (
+        <div
+          className="wp-content"
+          dangerouslySetInnerHTML={{ __html: page.content.rendered }}
+        />
+      ) : (
+        <p>Create a WordPress page with slug <code>about</code>.</p>
+      )}
     </main>
   );
 }
+

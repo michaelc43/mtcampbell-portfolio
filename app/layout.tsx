@@ -47,6 +47,7 @@ export default function RootLayout({
           <a href="/" style={{ marginRight: 16 }}>Home</a>
           <a href="/about" style={{ marginRight: 16 }}>About</a>
           <a href="/resume">Resume</a>
+          <a href="/Projects">Projects</a>
         </div>
       </nav>
         {children}
