@@ -18,21 +18,15 @@ export default async function AboutPage() {
 
   return (
     <main style={{ padding: 24, maxWidth: 900, margin: "0 auto" }}>
-      <h1
-        dangerouslySetInnerHTML={{
-          __html: page?.title.rendered ?? "About",
-        }}
-      />
       {page ? (
         <div
           className="wp-content"
           dangerouslySetInnerHTML={{ __html: page.content.rendered }}
         />
       ) : (
-        <p>
-          Create and publish a WordPress page with slug <code>home</code>.
-        </p>
+        <p>Create a WordPress page with slug <code>about</code>.</p>
       )}
     </main>
   );
 }
+

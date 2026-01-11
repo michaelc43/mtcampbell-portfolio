@@ -13,26 +13,20 @@ async function getPageBySlug(slug: string) {
   return pages[0] ?? null;
 }
 
-export default async function ResumePage() {
-  const page = await getPageBySlug("resume");
+export default async function AboutPage() {
+  const page = await getPageBySlug("about");
 
   return (
     <main style={{ padding: 24, maxWidth: 900, margin: "0 auto" }}>
-      <h1
-        dangerouslySetInnerHTML={{
-          __html: page?.title.rendered ?? "Resume",
-        }}
-      />
       {page ? (
         <div
           className="wp-content"
           dangerouslySetInnerHTML={{ __html: page.content.rendered }}
         />
       ) : (
-        <p>
-          Create and publish a WordPress page with slug <code>home</code>.
-        </p>
+        <p>Create a WordPress page with slug <code>about</code>.</p>
       )}
     </main>
   );
 }
+

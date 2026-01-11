@@ -18,11 +18,6 @@ export default async function HomePage() {
 
   return (
     <main style={{ padding: 24, maxWidth: 900, margin: "0 auto" }}>
-      <h1
-        dangerouslySetInnerHTML={{
-          __html: page?.title.rendered ?? "Home",
-        }}
-      />
       {page ? (
         <div
           className="wp-content"
@@ -36,3 +31,4 @@ export default async function HomePage() {
     </main>
   );
 }
+
