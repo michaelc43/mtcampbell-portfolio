@@ -44,13 +44,22 @@ body {
   margin: 0 0 1rem;
 }
 
-.wp-content ul, .wp-content ol {
+.wp-content ul {
+  list-style: disc;
   margin: 0 0 1rem 1.25rem;
+  padding-left: 1.25rem;
+}
+
+.wp-content ol {
+  list-style: decimal;
+  margin: 0 0 1rem 1.25rem;
+  padding-left: 1.25rem;
 }
 
 .wp-content li {
   margin: 0.25rem 0;
 }
+
 
 .wp-content a {
   text-decoration: underline;

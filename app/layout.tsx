@@ -29,11 +29,26 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-	<nav style={{ padding: 16, borderBottom: "1px solid #ddd" }}>
-	  <Link href="/" style={{ marginRight: 16 }}>Home</Link>
-	  <Link href="/about" style={{ marginRight: 16 }}>About</Link>
-	  <Link href="/resume">Resume</Link>
-	</nav>
+      <nav
+        style={{
+          padding: 16,
+          borderBottom: "1px solid #ddd",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 16,
+        }}
+      >
+        <div style={{ fontWeight: 700, fontSize: 18 }}>
+          Michael Campbell
+        </div>
+
+        <div>
+          <a href="/" style={{ marginRight: 16 }}>Home</a>
+          <a href="/about" style={{ marginRight: 16 }}>About</a>
+          <a href="/resume">Resume</a>
+        </div>
+      </nav>
         {children}
       </body>
     </html>
