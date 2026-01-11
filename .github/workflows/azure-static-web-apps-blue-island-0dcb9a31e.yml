@@ -23,13 +23,13 @@ jobs:
 
       - name: Debug env presence
         run: |
-         echo "WP_URL=$WP_URL"
-         if [ -n "$CF_ACCESS_CLIENT_ID" ]; then echo "CF_ACCESS_CLIENT_ID is set"; else echo "CF_ACCESS_CLIENT_ID is NOT set"; fi
-         if [ -n "$CF_ACCESS_CLIENT_SECRET" ]; then echo "CF_ACCESS_CLIENT_SECRET is set"; else echo "CF_ACCESS_CLIENT_SECRET is NOT set"; fi
+          echo "WP_URL=$WP_URL"
+          if [ -n "$CF_ACCESS_CLIENT_ID" ]; then echo "CF_ACCESS_CLIENT_ID is set"; else echo "CF_ACCESS_CLIENT_ID is NOT set"; fi
+          if [ -n "$CF_ACCESS_CLIENT_SECRET" ]; then echo "CF_ACCESS_CLIENT_SECRET is set"; else echo "CF_ACCESS_CLIENT_SECRET is NOT set"; fi
 	env:
-	 WP_URL: ${{ vars.WP_URL }}
-	 CF_ACCESS_CLIENT_ID: ${{ secrets.CF_ACCESS_CLIENT_ID }}
-	 CF_ACCESS_CLIENT_SECRET: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
+	  WP_URL: ${{ vars.WP_URL }}
+	  CF_ACCESS_CLIENT_ID: ${{ secrets.CF_ACCESS_CLIENT_ID }}
+	  CF_ACCESS_CLIENT_SECRET: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
 
       - name: Build And Deploy
         id: builddeploy
