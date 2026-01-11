@@ -55,3 +55,12 @@ body {
 .wp-content a {
   text-decoration: underline;
 }
+
+.wp-content {
+  max-width: 65ch;
+}
+
+.wp-content h1:first-child {
+  margin-top: 0;
+}
+

@@ -24,10 +24,13 @@ export default async function ResumePage() {
         }}
       />
       {page ? (
-	<div className="wp-content" dangerouslySetInnerHTML={{ __html: page.content.rendered }} />
+        <div
+          className="wp-content"
+          dangerouslySetInnerHTML={{ __html: page.content.rendered }}
+        />
       ) : (
         <p>
-          Create and publish a WordPress page with slug <code>resume</code>.
+          Create and publish a WordPress page with slug <code>home</code>.
         </p>
       )}
     </main>
