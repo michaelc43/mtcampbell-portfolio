@@ -5,6 +5,12 @@ type FetchOptions = Omit<RequestInit, "headers"> & {
 export async function wpFetch<T>(path: string, options: FetchOptions = {}): Promise<T> {
   const wpUrl = process.env.WP_URL;
   if (!wpUrl) throw new Error("WP_URL is not defined");
+  if (cfId && cfSecret) {
+   console.log("wpFetch: Cloudflare Access headers enabled");
+  } else {
+   console.log("wpFetch: Cloudflare Access headers NOT enabled");
+  }
+
 
   const headers: Record<string, string> = {
     "Accept": "application/json",
