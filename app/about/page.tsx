@@ -1,3 +1,5 @@
+import { wpFetch } from "@/lib/wp";
+
 export const dynamic = "force-static";
 
 type WPPage = {
@@ -7,32 +9,25 @@ type WPPage = {
 };
 
 async function getPageBySlug(slug: string) {
-  const wpUrl = process.env.WP_URL!;
-  import { wpFetch } from "@/lib/wp";
-
-const page = await wpFetch<any[]>(
-  `/wp-json/wp/v2/pages?slug=about`
-);
-
-const data = page[0];
-
-
-  if (!res.ok) throw new Error(`Failed to fetch page ${slug}: ${res.status}`);
-  const arr: WPPage[] = await res.json();
-  return arr[0] ?? null;
+  const pages = await wpFetch<WPPage[]>(`/wp-json/wp/v2/pages?slug=${slug}`);
+  return pages[0] ?? null;
 }
 
-export default async function About() {
+export default async function AboutPage() {
   const page = await getPageBySlug("about");
 
   return (
     <main style={{ padding: 24, maxWidth: 900, margin: "0 auto" }}>
-      <h1 dangerouslySetInnerHTML={{ __html: page?.title.rendered ?? "About" }} />
+      <h1
+        dangerouslySetInnerHTML={{
+          __html: page?.title.rendered ?? "About",
+        }}
+      />
       {page ? (
         <div dangerouslySetInnerHTML={{ __html: page.content.rendered }} />
       ) : (
         <p>
-          Create a WordPress page with slug <code>about</code> and publish it.
+          Create and publish a WordPress page with slug <code>about</code>.
         </p>
       )}
     </main>
