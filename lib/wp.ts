@@ -1,31 +1,27 @@
-type FetchOptions = RequestInit & {
-  revalidate?: number;
-}; 
+type FetchOptions = Omit<RequestInit, "headers"> & {
+  headers?: Record<string, string>;
+};
 
 export async function wpFetch<T>(
   path: string,
   options: FetchOptions = {}
 ): Promise<T> {
   const wpUrl = process.env.WP_URL;
+  if (!wpUrl) throw new Error("WP_URL is not defined");
 
-  if (!wpUrl) {
-    throw new Error("WP_URL is not defined");
-  }
-
-  const headers: HeadersInit = {
+  // Use a plain object so TypeScript allows custom header keys
+  const headers: Record<string, string> = {
     "Content-Type": "application/json",
-    ...(options.headers || {}),
+    ...(options.headers ?? {}),
   };
 
-  // Only add Cloudflare Access headers in CI / production
-  if (
-    process.env.CF_ACCESS_CLIENT_ID &&
-    process.env.CF_ACCESS_CLIENT_SECRET
-  ) {
-    headers["CF-Access-Client-Id"] =
-      process.env.CF_ACCESS_CLIENT_ID;
-    headers["CF-Access-Client-Secret"] =
-      process.env.CF_ACCESS_CLIENT_SECRET;
+  // Add Cloudflare Access service token headers when available (CI)
+  const cfId = process.env.CF_ACCESS_CLIENT_ID;
+  const cfSecret = process.env.CF_ACCESS_CLIENT_SECRET;
+
+  if (cfId && cfSecret) {
+    headers["CF-Access-Client-Id"] = cfId;
+    headers["CF-Access-Client-Secret"] = cfSecret;
   }
 
   const res = await fetch(`${wpUrl}${path}`, {
@@ -36,9 +32,7 @@ export async function wpFetch<T>(
 
   if (!res.ok) {
     const text = await res.text();
-    throw new Error(
-      `WP fetch failed ${res.status}: ${text}`
-    );
+    throw new Error(`WP fetch failed ${res.status}: ${text}`);
   }
 
   return res.json();
