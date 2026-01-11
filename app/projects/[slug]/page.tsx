@@ -10,13 +10,14 @@ type WPPage = {
   content: { rendered: string };
 };
 
-// Prebuild all project pages at build time (works great with static export)
 export async function generateStaticParams() {
+  // Find the parent "projects" page
   const parent = await wpFetch<any[]>(`/wp-json/wp/v2/pages?slug=projects`);
   const parentId = parent[0]?.id;
 
   if (!parentId) return [];
 
+  // Get child pages (projects)
   const children = await wpFetch<WPPage[]>(
     `/wp-json/wp/v2/pages?parent=${parentId}&per_page=100`
   );
@@ -40,8 +41,10 @@ export default async function ProjectDetailPage({
 
   return (
     <main style={{ padding: 24, maxWidth: 900, margin: "0 auto" }}>
-      {/* Let WordPress content control headings */}
-      <div className="wp-content" dangerouslySetInnerHTML={{ __html: page.content.rendered }} />
+      <div
+        className="wp-content"
+        dangerouslySetInnerHTML={{ __html: page.content.rendered }}
+      />
     </main>
   );
 }
