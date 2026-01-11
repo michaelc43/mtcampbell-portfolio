@@ -13,7 +13,7 @@ async function getPageBySlug(slug: string) {
   return pages[0] ?? null;
 }
 
-export default async function AboutPage() {
+export default async function ProjectsPage() {
   const page = await getPageBySlug("projects");
 
   return (
@@ -24,9 +24,10 @@ export default async function AboutPage() {
           dangerouslySetInnerHTML={{ __html: page.content.rendered }}
         />
       ) : (
-        <p>Create a WordPress page with slug <code>about</code>.</p>
+        <p>
+          Create and publish a WordPress page with slug <code>projects</code>.
+        </p>
       )}
     </main>
   );
 }
-
