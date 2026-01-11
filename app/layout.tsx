@@ -43,7 +43,7 @@ export default function RootLayout({
           Michael Campbell
         </div>
 
-        <nav style={{ padding: 16 }}>
+        <nav>
           <Link href="/" style={{ marginRight: 16 }}>Home</Link>
           <Link href="/about" style={{ marginRight: 16 }}>About</Link>
           <Link href="/resume" style={{ marginRight: 16 }}>Resume</Link>
