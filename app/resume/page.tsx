@@ -14,7 +14,7 @@ async function getPageBySlug(slug: string) {
 }
 
 export default async function AboutPage() {
-  const page = await getPageBySlug("about");
+  const page = await getPageBySlug("resume");
 
   return (
     <main style={{ padding: 24, maxWidth: 900, margin: "0 auto" }}>
