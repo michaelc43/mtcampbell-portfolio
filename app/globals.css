@@ -12,15 +12,46 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/*
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
   }
 }
+*/
+
+html, body {
+  padding: 0;
+  margin: 0;
+}
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #fff;
+  color: #111;
+  font-family: var(--font-geist-sans), system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  line-height: 1.6;
+}
+
+
+/* Basic typography for WordPress-rendered HTML */
+.wp-content h1, .wp-content h2, .wp-content h3 {
+  line-height: 1.25;
+  margin: 1.2rem 0 0.6rem;
+}
+
+.wp-content p {
+  margin: 0 0 1rem;
+}
+
+.wp-content ul, .wp-content ol {
+  margin: 0 0 1rem 1.25rem;
+}
+
+.wp-content li {
+  margin: 0.25rem 0;
+}
+
+.wp-content a {
+  text-decoration: underline;
 }

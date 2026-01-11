@@ -24,7 +24,7 @@ export default async function AboutPage() {
         }}
       />
       {page ? (
-        <div dangerouslySetInnerHTML={{ __html: page.content.rendered }} />
+	<div className="wp-content" dangerouslySetInnerHTML={{ __html: page.content.rendered }} />
       ) : (
         <p>
           Create and publish a WordPress page with slug <code>about</code>.
