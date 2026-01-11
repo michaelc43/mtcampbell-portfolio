@@ -1,58 +1,20 @@
-type FetchOptions = Omit<RequestInit, "headers"> & {
-  headers?: Record<string, string>;
-};
+const wpUrl = process.env.WP_URL;
+if (!wpUrl) throw new Error("WP_URL is not defined");
 
-export async function wpFetch<T>(
-  path: string,
-  options: FetchOptions = {}
-): Promise<T> {
-  const wpUrl = process.env.WP_URL;
-  if (!wpUrl) throw new Error("WP_URL is not defined");
-
-  const cfId = process.env.CF_ACCESS_CLIENT_ID;
-  const cfSecret = process.env.CF_ACCESS_CLIENT_SECRET;
-
-  if (cfId && cfSecret) {
-    console.log("wpFetch: Cloudflare Access headers enabled");
-  } else {
-    console.log("wpFetch: Cloudflare Access headers NOT enabled");
-  }
-
-  const headers: Record<string, string> = {
-    Accept: "application/json",
-    ...(options.headers ?? {}),
-  };
-
-  if (cfId && cfSecret) {
-    headers["CF-Access-Client-Id"] = cfId;
-    headers["CF-Access-Client-Secret"] = cfSecret;
-  }
-
+export async function wpFetch<T>(path: string): Promise<T> {
   const url = `${wpUrl}${path}`;
   const res = await fetch(url, {
-    ...options,
-    headers,
+    // no CF Access headers
     cache: "force-cache",
   });
 
-  const contentType = res.headers.get("content-type") ?? "";
-  const bodyText = await res.text();
-
-  if (contentType.includes("text/html") || bodyText.startsWith("<!DOCTYPE")) {
+  const contentType = res.headers.get("content-type") || "";
+  if (!contentType.includes("application/json")) {
+    const body = await res.text();
     throw new Error(
-      `WP fetch returned HTML instead of JSON.\n` +
-        `URL: ${url}\n` +
-        `Status: ${res.status}\n` +
-        `Content-Type: ${contentType}\n` +
-        `Body preview: ${bodyText.slice(0, 200)}`
+      `WP fetch returned non-JSON.\nURL: ${url}\nStatus: ${res.status}\nContent-Type: ${contentType}\nBody preview: ${body.slice(0, 200)}`
     );
   }
 
-  if (!res.ok) {
-    throw new Error(
-      `WP fetch failed ${res.status}.\nURL: ${url}\nBody: ${bodyText.slice(0, 200)}`
-    );
-  }
-
-  return JSON.parse(bodyText) as T;
+  return res.json() as Promise<T>;
 }
