@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { wpFetch } from "@/lib/wp";
+import Link from "next/link";
 
 export const dynamic = "force-static";
 export const dynamicParams = false;
@@ -64,8 +65,25 @@ export default async function ProjectDetailPage({
 
   return (
     <main style={{ padding: 24, maxWidth: 900, margin: "0 auto" }}>
-      <h1 dangerouslySetInnerHTML={{ __html: page.title.rendered }} />
-      <div className="wp-content" dangerouslySetInnerHTML={{ __html: page.content.rendered }} />
+      
+      {/* Back link */}
+      <div style={{ marginBottom: 24 }}>
+        <Link
+          href="/projects"
+          style={{
+            textDecoration: "none",
+            fontWeight: 500,
+            color: "#555",
+          }}
+        >
+          ← Back to Projects
+        </Link>
+      </div>
+
+      <div
+        className="wp-content"
+        dangerouslySetInnerHTML={{ __html: page.content.rendered }}
+      />
     </main>
   );
 }
