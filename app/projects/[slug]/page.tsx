@@ -11,9 +11,22 @@ type WPPage = {
 };
 
 async function getProjectsParentId() {
-  const parent = await wpFetch<any[]>(`/wp-json/wp/v2/pages?slug=projects`);
-  return parent[0]?.id as number | undefined;
-}
+    const parent = await wpFetch<any[]>(`/wp-json/wp/v2/pages?slug=projects`);
+    return parent[0]?.id as number | undefined;
+  }
+  
+  async function getProjectBySlug(slug: string) {
+    const parentId = await getProjectsParentId();
+    if (!parentId) return null;
+  
+    // IMPORTANT: constrain to the Projects parent
+    const pages = await wpFetch<WPPage[]>(
+      `/wp-json/wp/v2/pages?slug=${slug}&parent=${parentId}&per_page=1`
+    );
+  
+    return pages[0] ?? null;
+  }
+  
 
 async function getProjectChildren(parentId: number) {
   return wpFetch<WPPage[]>(
@@ -40,7 +53,10 @@ export default async function ProjectDetailPage({
   const children = await getProjectChildren(parentId);
   const page = children.find((p) => p.slug === params.slug) ?? null;
 
-  if (!page) notFound();
+  if (!page) {
+    console.log("Project not found at build time:", params.slug);
+    notFound();
+  } 
 
   return (
     <main style={{ padding: 24, maxWidth: 900, margin: "0 auto" }}>
