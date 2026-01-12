@@ -7,29 +7,16 @@ type WPPage = {
   id: number;
   slug: string;
   title: { rendered: string };
+  content?: { rendered: string };
   excerpt?: { rendered: string };
 };
 
-async function getProjectsParentId() {
-  const parent = await wpFetch<any[]>(`/wp-json/wp/v2/pages?slug=projects`);
-  return parent[0]?.id as number | undefined;
+async function getProjectsParent() {
+  const pages = await wpFetch<WPPage[]>(`/wp-json/wp/v2/pages?slug=projects`);
+  return pages[0] ?? null;
 }
-
-async function getProjectBySlug(slug: string) {
-  const parentId = await getProjectsParentId();
-  if (!parentId) return null;
-
-  // pull all children under Projects and find the matching slug
-  const children = await wpFetch<WPPage[]>(
-    `/wp-json/wp/v2/pages?parent=${parentId}&per_page=100`
-  );
-
-  return children.find((p) => p.slug === slug) ?? null;
-}
-
 
 async function getProjectChildren(parentId: number) {
-  // menu_order works great for ordering child pages in WP
   return wpFetch<WPPage[]>(
     `/wp-json/wp/v2/pages?parent=${parentId}&per_page=100&orderby=menu_order&order=asc`
   );
@@ -40,32 +27,39 @@ function stripHtml(html: string) {
 }
 
 export default async function ProjectsIndexPage() {
-  const parentId = await getProjectsParentId();
+  const parent = await getProjectsParent();
 
-  if (!parentId) {
+  if (!parent) {
     return (
       <main style={{ padding: 24, maxWidth: 900, margin: "0 auto" }}>
         <h1>Projects</h1>
         <p>
-          Create a WordPress page with slug <code>projects</code> (you already did),
-          then add child pages under it for each project.
+          Create a WordPress page with slug <code>projects</code>, then add child
+          pages under it for each project.
         </p>
       </main>
     );
   }
 
-  const projects = await getProjectChildren(parentId);
+  const projects = await getProjectChildren(parent.id);
 
   return (
     <main style={{ padding: 24, maxWidth: 900, margin: "0 auto" }}>
-      <h1>Projects</h1>
+      {/* Render WP-controlled content FIRST */}
+      <div
+        className="wp-content"
+        dangerouslySetInnerHTML={{
+          __html: parent.content?.rendered ?? "",
+        }}
+      />
 
+      {/* Cards AFTER the WP content */}
       {projects.length === 0 ? (
-        <p>
+        <p style={{ marginTop: 16 }}>
           Add child pages under <code>Projects</code> in WordPress to populate this list.
         </p>
       ) : (
-        <div style={{ display: "grid", gap: 16 }}>
+        <div style={{ display: "grid", gap: 16, marginTop: 16 }}>
           {projects.map((p) => {
             const excerptText = p.excerpt?.rendered
               ? stripHtml(p.excerpt.rendered)
@@ -84,7 +78,8 @@ export default async function ProjectsIndexPage() {
                   color: "inherit",
                 }}
               >
-                <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}
+                <div
+                  style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}
                   dangerouslySetInnerHTML={{ __html: p.title.rendered }}
                 />
                 {excerptText ? (
