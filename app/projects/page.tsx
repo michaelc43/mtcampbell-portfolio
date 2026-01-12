@@ -11,10 +11,22 @@ type WPPage = {
 };
 
 async function getProjectsParentId() {
-  const pages = await wpFetch<any[]>(`/wp-json/wp/v2/pages?slug=projects`);
-  const parent = pages[0];
-  return parent?.id as number | undefined;
+  const parent = await wpFetch<any[]>(`/wp-json/wp/v2/pages?slug=projects`);
+  return parent[0]?.id as number | undefined;
 }
+
+async function getProjectBySlug(slug: string) {
+  const parentId = await getProjectsParentId();
+  if (!parentId) return null;
+
+  // pull all children under Projects and find the matching slug
+  const children = await wpFetch<WPPage[]>(
+    `/wp-json/wp/v2/pages?parent=${parentId}&per_page=100`
+  );
+
+  return children.find((p) => p.slug === slug) ?? null;
+}
+
 
 async function getProjectChildren(parentId: number) {
   // menu_order works great for ordering child pages in WP
