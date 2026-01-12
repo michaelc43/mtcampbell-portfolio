@@ -1,0 +1,13 @@
+{
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": [
+      "/projects/*",
+      "/about/*",
+      "/resume/*",
+      "/*.css",
+      "/*.js",
+      "/_next/*"
+    ]
+  }
+}

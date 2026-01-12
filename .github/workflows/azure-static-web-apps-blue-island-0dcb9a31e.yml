@@ -39,6 +39,9 @@ jobs:
           test -f out/projects/zabbix-templates/index.html
           echo "Export output verified."
 
+      - name: Copy SWA config
+        run: cp staticwebapp.config.json out/
+
       # Optional but often helpful: if you use staticwebapp.config.json, copy it into out/
       # - name: Copy SWA config into out
       #   run: |
