@@ -45,10 +45,7 @@ export default async function ProjectDetailPage({
   return (
     <main style={{ padding: 24, maxWidth: 900, margin: "0 auto" }}>
       <h1 dangerouslySetInnerHTML={{ __html: page.title.rendered }} />
-      <div
-        className="wp-content"
-        dangerouslySetInnerHTML={{ __html: page.content.rendered }}
-      />
+      <div className="wp-content" dangerouslySetInnerHTML={{ __html: page.content.rendered }} />
     </main>
   );
 }
