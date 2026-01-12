@@ -74,7 +74,7 @@ export default async function ProjectsIndexPage() {
             return (
               <Link
                 key={p.id}
-                href={`/projects/${p.slug}`}
+                href={`/projects/${p.slug}/`}
                 style={{
                   display: "block",
                   border: "1px solid #e5e5e5",

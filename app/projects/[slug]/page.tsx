@@ -17,7 +17,7 @@ async function getProjectsParentId() {
 
 async function getProjectChildren(parentId: number) {
   return wpFetch<WPPage[]>(
-    `/wp-json/wp/v2/pages?parent=${parentId}&per_page=100`
+    `/wp-json/wp/v2/pages?parent=${parentId}&per_page=100&orderby=menu_order&order=asc`
   );
 }
 
@@ -26,10 +26,6 @@ export async function generateStaticParams() {
   if (!parentId) return [];
 
   const children = await getProjectChildren(parentId);
-
-  console.log("projects parentId:", parentId);
-  console.log("projects slugs:", children.map((c) => c.slug));
-
   return children.map((p) => ({ slug: p.slug }));
 }
 
