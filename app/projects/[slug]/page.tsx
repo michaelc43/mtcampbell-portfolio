@@ -11,37 +11,34 @@ type WPPage = {
 };
 
 async function getProjectsParentId() {
-    const parent = await wpFetch<any[]>(`/wp-json/wp/v2/pages?slug=projects`);
-    return parent[0]?.id as number | undefined;
-  }
-  
-  async function getProjectBySlug(slug: string) {
-    const parentId = await getProjectsParentId();
-    if (!parentId) return null;
-  
-    // Constrain to children of Projects
-    const pages = await wpFetch<WPPage[]>(
-      `/wp-json/wp/v2/pages?slug=${slug}&parent=${parentId}&per_page=1`
-    );
-  
-    console.log("detail lookup slug:", slug, "parent:", parentId, "count:", pages.length);
-    return pages[0] ?? null;
-  }
-  
-  
-
-async function getProjectChildren(parentId: number) {
-  return wpFetch<WPPage[]>(
-    `/wp-json/wp/v2/pages?parent=${parentId}&per_page=100&orderby=menu_order&order=asc`
-  );
+  const parent = await wpFetch<WPPage[]>(`/wp-json/wp/v2/pages?slug=projects&per_page=1`);
+  return parent[0]?.id;
 }
 
 export async function generateStaticParams() {
   const parentId = await getProjectsParentId();
   if (!parentId) return [];
 
-  const children = await getProjectChildren(parentId);
+  const children = await wpFetch<WPPage[]>(
+    `/wp-json/wp/v2/pages?parent=${parentId}&per_page=100`
+  );
+
+  console.log("projects parentId:", parentId);
+  console.log("projects slugs:", children.map((c) => c.slug));
+
   return children.map((p) => ({ slug: p.slug }));
+}
+
+async function getProjectBySlug(slug: string) {
+  const parentId = await getProjectsParentId();
+  if (!parentId) return null;
+
+  const pages = await wpFetch<WPPage[]>(
+    `/wp-json/wp/v2/pages?parent=${parentId}&slug=${slug}&per_page=1`
+  );
+
+  console.log("detail lookup:", { slug, parentId, count: pages.length });
+  return pages[0] ?? null;
 }
 
 export default async function ProjectDetailPage({
@@ -49,21 +46,17 @@ export default async function ProjectDetailPage({
 }: {
   params: { slug: string };
 }) {
-  const parentId = await getProjectsParentId();
-  if (!parentId) notFound();
+  const page = await getProjectBySlug(params.slug);
 
-  const children = await getProjectChildren(parentId);
-  const page = children.find((p) => p.slug === params.slug) ?? null;
-
-  if (!page) {
-    console.log("Project not found at build time:", params.slug);
-    notFound();
-  } 
+  if (!page) notFound();
 
   return (
     <main style={{ padding: 24, maxWidth: 900, margin: "0 auto" }}>
       <h1 dangerouslySetInnerHTML={{ __html: page.title.rendered }} />
-      <div className="wp-content" dangerouslySetInnerHTML={{ __html: page.content.rendered }} />
+      <div
+        className="wp-content"
+        dangerouslySetInnerHTML={{ __html: page.content.rendered }}
+      />
     </main>
   );
 }
