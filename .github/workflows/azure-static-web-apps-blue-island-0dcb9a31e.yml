@@ -32,6 +32,14 @@ jobs:
           CF_ACCESS_CLIENT_ID: ${{ secrets.CF_ACCESS_CLIENT_ID }}
           CF_ACCESS_CLIENT_SECRET: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
 
+      - name: Verify exported files exist
+        run: |
+          ls -la
+          echo "---- out/projects ----"
+          ls -la out/projects || true
+          echo "---- out/projects/zabbix-templates ----"
+          ls -la out/projects/zabbix-templates || true
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
