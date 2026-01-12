@@ -22,6 +22,10 @@ export async function generateStaticParams() {
     `/wp-json/wp/v2/pages?parent=${parentId}&per_page=100`
   );
 
+  console.log("projects parentId:", parentId);
+  console.log("projects slugs:", children.map(c => c.slug));
+
+
   return children.map((p) => ({ slug: p.slug }));
 }
 
