@@ -42,6 +42,15 @@ jobs:
       - name: Copy SWA config
         run: cp staticwebapp.config.json out/
 
+      - name: Verify project page is not a 404 fallback
+        run: |
+          echo "---- out/projects/zabbix-templates/index.html (first 40 lines) ----"
+          sed -n '1,40p' out/projects/zabbix-templates/index.html
+          if grep -qi "NEXT_HTTP_ERROR_FALLBACK" out/projects/zabbix-templates/index.html; then
+            echo "ERROR: exported project page is a 404 fallback"
+            exit 1
+          fi
+  
       # Optional but often helpful: if you use staticwebapp.config.json, copy it into out/
       # - name: Copy SWA config into out
       #   run: |

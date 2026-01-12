@@ -19,13 +19,15 @@ async function getProjectsParentId() {
     const parentId = await getProjectsParentId();
     if (!parentId) return null;
   
-    // IMPORTANT: constrain to the Projects parent
+    // Constrain to children of Projects
     const pages = await wpFetch<WPPage[]>(
       `/wp-json/wp/v2/pages?slug=${slug}&parent=${parentId}&per_page=1`
     );
   
+    console.log("detail lookup slug:", slug, "parent:", parentId, "count:", pages.length);
     return pages[0] ?? null;
   }
+  
   
 
 async function getProjectChildren(parentId: number) {
