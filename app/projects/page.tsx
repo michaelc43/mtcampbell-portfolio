@@ -98,11 +98,7 @@ export default async function ProjectsIndexPage() {
                 <div
                   style={{
                     marginTop: 12,
-                    display: "inline-block",
-                    padding: "8px 12px",
-                    borderRadius: 8,
-                    border: "1px solid #ddd",
-                    fontWeight: 600,
+                    fontWeight: 700,
                   }}
                 >
                   More details →
