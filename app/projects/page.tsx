@@ -68,7 +68,7 @@ export default async function ProjectsIndexPage() {
             return (
               <Link
                 key={p.id}
-                href={`/projects/${p.slug}/`}
+                href={`/projects/${p.slug}`}
                 style={{
                   display: "block",
                   border: "1px solid #e5e5e5",
@@ -82,13 +82,31 @@ export default async function ProjectsIndexPage() {
                   style={{ fontSize: 18, fontWeight: 700, marginBottom: 6 }}
                   dangerouslySetInnerHTML={{ __html: p.title.rendered }}
                 />
-                {excerptText ? (
-                  <div style={{ color: "#555" }}>{excerptText}</div>
-                ) : (
-                  <div style={{ color: "#555" }}>
-                    (Add an excerpt in WordPress if you want a short summary here.)
-                  </div>
-                )}
+
+                <div
+                  style={{
+                    color: "#555",
+                    display: "-webkit-box",
+                    WebkitLineClamp: 6, // 5–10 is typical
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                  }}
+                >
+                  {excerptText || "(Add an excerpt in WordPress for a short summary.)"}
+                </div>
+
+                <div
+                  style={{
+                    marginTop: 12,
+                    display: "inline-block",
+                    padding: "8px 12px",
+                    borderRadius: 8,
+                    border: "1px solid #ddd",
+                    fontWeight: 600,
+                  }}
+                >
+                  More details →
+                </div>
               </Link>
             );
           })}
