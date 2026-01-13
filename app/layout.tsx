@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-
+import SiteShell from "./SiteShell";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,7 +13,7 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Michael Campbell | Portfolio",
   description: "Portfolio and resume site for Michael Campbell.",
 };
@@ -26,31 +25,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-      <nav
-        style={{
-          padding: 16,
-          borderBottom: "1px solid #ddd",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          gap: 16,
-        }}
-      >
-        <div style={{ fontWeight: 700, fontSize: 18 }}>
-          Michael Campbell
-        </div>
-
-        <nav>
-          <Link href="/" style={{ marginRight: 16 }}>Home</Link>
-          <Link href="/about" style={{ marginRight: 16 }}>About</Link>
-          <Link href="/resume" style={{ marginRight: 16 }}>Resume</Link>
-          <Link href="/projects">Projects</Link>
-        </nav>
-      </nav>
-        {children}
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+        <SiteShell>{children}</SiteShell>
       </body>
     </html>
   );
